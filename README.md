@@ -1,4 +1,4 @@
-##Local Setup
+## Local Setup
 
 前提条件
 -PHP 7.4 以上
