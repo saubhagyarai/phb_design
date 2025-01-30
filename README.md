@@ -14,5 +14,5 @@ git clone https://github.com/saubhagyarai/phb_design.git
 プロジェクト ディレクトリに移動します:
 
 ```bash
-cd main
+cd phb_design
 ```
