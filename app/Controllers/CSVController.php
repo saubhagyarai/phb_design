@@ -14,27 +14,27 @@ class CSVController extends DebuggerClass
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file']) && !is_null($_POST['phar_id'])) {
             try {
                 $file = $_FILES['csv_file'];
-                $pharId = $_POST['phar_id']; // Get the input value
+                $pharId = $_POST['phar_id']; // 入力値を取得する
 
-                // Validate file type (CSV)
+                // ファイルタイプを検証 (CSV)
                 if (!in_array($file['type'], ['text/csv'])) {
-                    throw new Exception("Invalid file type. Only CSV files are allowed.");
+                    throw new Exception("無効なファイル タイプです。CSV ファイルのみが許可されます。");
                 }
 
-                // Get User timing data
+               // ユーザータイミングデータを取得する
                 $fileHandler = new FileHandlerClass();
                 $csvData = $fileHandler->readCsv($_FILES['csv_file']['tmp_name']);
 
                 $dataProcessor = new DataProcessorClass($csvData, $pharId);
-                // Create T_UNT file
+                // T_UNTファイルを作成する
                 $untProcessedData = $dataProcessor->createTUntData();
                 $fileHandler->exportCSV($untProcessedData, "storage/{$pharId}/T_UNT.csv");
 
-                // Create d_timing_facility file
+               // d_timing_facility ファイルを作成する
                 $timingFacilityProcessedData = $dataProcessor->createTimingFacilityData();
                 $fileHandler->exportTextFile($timingFacilityProcessedData, "storage/{$pharId}/d_timing_facility.csv");
 
-                // Create d_timing_facility_Detail file
+                // d_timing_facility ファイルを作成する
                 $timingFacilityDetailProcessedData = $dataProcessor->createTimingFacilityDetailData();
                 $fileHandler->exportTextFile($timingFacilityDetailProcessedData, "storage/{$pharId}/d_timing_facility_Detail.csv");
 
@@ -45,3 +45,4 @@ class CSVController extends DebuggerClass
         }
     }
 }
+d

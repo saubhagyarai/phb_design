@@ -5,23 +5,23 @@ namespace App;
 class FileHandlerClass
 {
 
-    // Reads the csv data of user timing
+    // ユーザーのタイミングデータのCSVを読み取る
     public function readCsv($filePath)
     {
         $data = [];
-        $firstRow = true; // Flag to track the first row
+        $firstRow = true; // 最初の行を追跡するフラグ
 
         if (($handle = fopen($filePath, 'r')) !== FALSE) {
             while (($row = fgetcsv($handle, 1000, ',', '"', '\\')) !== FALSE) {
-                // Discard the first row
+                // 最初の行を破棄する
                 if ($firstRow) {
                     $firstRow = false;
-                    continue; // Skip to the next iteration of the loop
+                    continue; // ループの次の反復にスキップ
                 }
-                // Combine checks for empty row and "?" symbol
+                // 空の行と「?」記号のチェックを結合
                 if (!empty($row) && $row[1] !== '?') {
-                    $formattedValue = str_pad($row[1], 4, '0', STR_PAD_LEFT); // Add leading zeros
-                    $formattedValue1 = str_pad($row[8], 4, '0', STR_PAD_LEFT); // Add leading zeros
+                    $formattedValue = str_pad($row[1], 4, '0', STR_PAD_LEFT); // 先頭にゼロを追加
+                    $formattedValue1 = str_pad($row[8], 4, '0', STR_PAD_LEFT); // 先頭にゼロを追加
 
                     $data[$formattedValue1] = [
                         "title" => $row[0],
@@ -35,82 +35,82 @@ class FileHandlerClass
         return $data;
     }
 
-    // Exports CSV file
+    // CSVファイルをエクスポートする
     public function exportCSV($data, $filePath)
     {
         $this->writeCsv($filePath, $data);
     }
 
-    // Exports txt file
+    // テキストファイルをエクスポートする
     public function exportTextFile($data, $filePath)
     {
         $this->writeFile($filePath, $data);
     }
 
-    // Writes data in csv file
+    // CSVファイルにデータを書き込む
     public function writeCsv($filePath, $data)
     {
-        // Get the directory path from the file path
+        // ファイルパスからディレクトリパスを取得
         $dirPath = dirname($filePath);
 
-        // Check if directory exists and delete it before recreating
+        // ディレクトリが存在するか確認し、再作成前に削除
         if (is_dir($dirPath)) {
-            // Recursively delete the directory and its contents
+            // ディレクトリとその内容を再帰的に削除
             $this->deleteDirectory($dirPath);
         }
 
-        // Create the directory again
+        // ディレクトリを再度作成
         if (!mkdir($dirPath, 0775, true) && !is_dir($dirPath)) {
-            throw new \Exception("Failed to create directory: $dirPath. Check permissions.");
+            throw new \Exception("ディレクトリの作成に失敗しました: $dirPath。権限を確認してください。");
         }
 
-        // Open the file for writing (this returns a resource)
+        // ファイルを書き込み用に開く（リソースを返す）
         $file = fopen($filePath, 'w');
 
-        // Check if file was successfully opened
+        // ファイルが正常に開かれたか確認
         if ($file === false) {
-            throw new \Exception("Failed to open file: $filePath");
+            throw new \Exception("ファイルのオープンに失敗しました: $filePath");
         }
 
-        // Write CSV data
+        // CSVデータを書き込む
         foreach ($data as $row) {
-            fputcsv($file, $row, ',', '"', '\\'); // Explicitly pass the $escape parameter
+            fputcsv($file, $row, ',', '"', '\\'); // $escapeパラメータを明示的に渡す
         }
 
-        // Close the file
+        // ファイルを閉じる
         fclose($file);
     }
 
-    // Writes data in txt file
+    // テキストファイルにデータを書き込む
     public function writeFile($filePath, $data)
     {
-        // Open the file for writing (this returns a resource)
+        // ファイルを書き込み用に開く（リソースを返す）
         $file = fopen($filePath, 'w');
 
-        // Check if file was successfully opened
+        // ファイルが正常に開かれたか確認
         if ($file === false) {
-            throw new \Exception("Failed to open file: $filePath");
+            throw new \Exception("ファイルのオープンに失敗しました: $filePath");
         }
 
-        // Write each SQL statement to the file
+        // 各SQLステートメントをファイルに書き込む
         foreach ($data as $statement) {
             fwrite($file, $statement . PHP_EOL);
         }
-        // Close the file
+        // ファイルを閉じる
         fclose($file);
     }
 
-    // delete the directory and its contents
+    // ディレクトリとその内容を削除する
     private function deleteDirectory($dirPath)
     {
-        // Ensure directory is not empty before deleting
+        // 削除前にディレクトリが空でないことを確認
         foreach (glob($dirPath . '/*') as $file) {
             if (is_dir($file)) {
-                $this->deleteDirectory($file); // Recursive call to delete subdirectories
+                $this->deleteDirectory($file); // サブディレクトリを削除するための再帰呼び出し
             } else {
-                unlink($file); // Delete file
+                unlink($file); // ファイルを削除
             }
         }
-        rmdir($dirPath); // Remove the empty directory
+        rmdir($dirPath); // 空のディレクトリを削除
     }
 }
