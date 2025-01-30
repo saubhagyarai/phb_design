@@ -21,12 +21,12 @@ $csvController();
     <h1>T_UNT.csv、d_facility_timings、d_facility_timings_Detailsの生成</h1>
     <form action="index.php" method="POST" enctype="multipart/form-data">
         <div>
-            <label for="csvFile">Select User Timing CSV File:</label>
+            <label for="csvFile">ユーザータイミングCSVファイルを選択:</label>
             <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
         </div>
         <br>
         <div>
-            <label for="numberInput">Enter a Number:</label>
+            <label for="numberInput">薬局ID:</label>
             <input type="number" id="phar_id" name="phar_id" min="1" required>
         </div>
 

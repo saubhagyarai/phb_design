@@ -16,7 +16,7 @@ class CSVController extends DebuggerClass
                 $file = $_FILES['csv_file'];
                 $pharId = $_POST['phar_id']; // Get the input value
 
-                // Validate file type (e.g., CSV)
+                // Validate file type (CSV)
                 if (!in_array($file['type'], ['text/csv'])) {
                     throw new Exception("Invalid file type. Only CSV files are allowed.");
                 }
