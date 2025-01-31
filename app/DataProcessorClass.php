@@ -63,7 +63,7 @@ class DataProcessorClass extends DebuggerClass
         // マスターデータを処理する
         foreach ([1 => 1001, 2 => 2001] as $type => $snStart) {
             $sn = $snStart;
-            $pharId = 9999999999;
+            $pharId = DEFAULT_UNT_PHAR_ID;
             foreach ($this->masterData as $value) {
                 $wrtDataMaster[] = [
                     $sn,
@@ -103,8 +103,8 @@ class DataProcessorClass extends DebuggerClass
     // タイミング施設データを生成する
     public function createTimingFacilityData()
     {
-        $facId = 101;
-        $defaultPharId = 100;
+        $facId = DEFAULT_FAC_ID;
+        $defaultPharId = DEFAULT_PHAR_ID;
 
         // デフォルト薬局と動的薬局のクエリを格納する配列を初期化
         $defaultPharQueries = [];
@@ -134,7 +134,7 @@ class DataProcessorClass extends DebuggerClass
     {
         [$comparedData] = $this->compareUserDataWithMasterData();
 
-        $facId = 101;
+        $facId = DEFAULT_FAC_ID;
         $pharId = $this->pharId;
         $code = "";
         $name = "";

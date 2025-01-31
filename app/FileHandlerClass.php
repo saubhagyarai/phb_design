@@ -59,7 +59,7 @@ class FileHandlerClass extends DebuggerClass
 
         // ディレクトリを再度作成
         if (!mkdir($dirPath, 0775, true) && !is_dir($dirPath)) {
-            throw new \Exception("ディレクトリの作成に失敗しました: $dirPath。権限を確認してください。");
+            throw new \Exception("ディレクトリの作成に失敗しました: {$dirPath}。権限を確認してください。");
         }
 
         // ファイルを書き込み用に開く（リソースを返す）

@@ -1,5 +1,7 @@
 <?php
-
+define("DEFAULT_PHAR_ID", 100);
+define("DEFAULT_UNT_PHAR_ID", 9999999999);
+define("DEFAULT_FAC_ID", 101);
 define("ADJUSTED_TIMING", [
     "起床時薬" => ["おきた時", "起床時"],
     "15時" => ["１５時", "１５時に服用"],
