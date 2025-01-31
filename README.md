@@ -1,4 +1,4 @@
-##Local Setup
+## Local Setup
 
 前提条件
 -PHP 7.4 以上
@@ -14,5 +14,5 @@ git clone https://github.com/saubhagyarai/phb_design.git
 プロジェクト ディレクトリに移動します:
 
 ```bash
-cd main
+cd phb_design
 ```
