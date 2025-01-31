@@ -1,3 +1,2 @@
-# Ignore Composer dependencies
 /vendor/
-/storage
+storage/*
