@@ -2,6 +2,7 @@
 
 namespace App;
 
+require_once __DIR__ . '/../config/conf.php'; // Load the file
 
 class DataProcessorClass extends DebuggerClass
 {
@@ -161,12 +162,14 @@ class DataProcessorClass extends DebuggerClass
     public function compareUserDataWithMasterData()
     {
         $comparedData = [];
+        // Loop the UserTimingData
         foreach ($this->inputCSV as $key => $row) {
-            $userTime = $row['user_time'];
+            $enUserTitle = mb_convert_encoding($row["title"], "UTF-8", "SJIS");
+            // Compare user time with Master time
             foreach ($this->masterData as $master) {
+                $enMasterTitle = mb_convert_encoding($master["title"], "UTF-8", "SJIS");
                 // ユーザー時間とマスターコードを比較
-                // ユーザー時間とマスター時間が一致する場合
-                if ($userTime === $master['code']) {
+                if ($enUserTitle == $enMasterTitle) {
                     // データを新しい配列にマージ
                     $comparedData[$key] = [
                         "user" => $row,
@@ -177,10 +180,28 @@ class DataProcessorClass extends DebuggerClass
                             "print_group" => $master['print_group'],
                         ],
                     ];
+                    continue;
+                }
+
+                if (isset(ADJUSTED_TIMING[$enMasterTitle])) {
+                    foreach (ADJUSTED_TIMING[$enMasterTitle] as $value) {
+                        // ユーザー時間とマスターコードを比較
+                        if ($enUserTitle == $value) {
+                            // データを新しい配列にマージ
+                            $comparedData[$key] = [
+                                "user" => $row,
+                                "master" => [
+                                    "title" => $master['title'],
+                                    "code" => $master['code'],
+                                    "print_code" => $master['print_code'],
+                                    "print_group" => $master['print_group'],
+                                ],
+                            ];
+                        }
+                    }
                 }
             }
         }
-
         return $comparedData;
     }
 }

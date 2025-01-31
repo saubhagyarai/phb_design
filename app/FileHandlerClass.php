@@ -2,7 +2,7 @@
 
 namespace App;
 
-class FileHandlerClass
+class FileHandlerClass extends DebuggerClass
 {
 
     // ユーザーのタイミングデータのCSVを読み取る
@@ -20,12 +20,10 @@ class FileHandlerClass
                 }
                 // 空の行と「?」記号のチェックを結合
                 if (!empty($row) && $row[1] !== '?') {
-                    $formattedValue = str_pad($row[1], 4, '0', STR_PAD_LEFT); // 先頭にゼロを追加
-                    $formattedValue1 = str_pad($row[8], 4, '0', STR_PAD_LEFT); // 先頭にゼロを追加
+                    $formattedValue1 = str_pad($row[7], 4, '0', STR_PAD_LEFT); // 先頭にゼロを追加
 
                     $data[$formattedValue1] = [
                         "title" => $row[0],
-                        "user_time" => $formattedValue,
                         "print_value" => $formattedValue1
                     ];
                 }

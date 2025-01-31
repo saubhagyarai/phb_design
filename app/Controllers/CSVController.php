@@ -21,7 +21,7 @@ class CSVController extends DebuggerClass
                     throw new Exception("無効なファイル タイプです。CSV ファイルのみが許可されます。");
                 }
 
-               // ユーザータイミングデータを取得する
+                // ユーザータイミングデータを取得するp
                 $fileHandler = new FileHandlerClass();
                 $csvData = $fileHandler->readCsv($_FILES['csv_file']['tmp_name']);
 
@@ -30,7 +30,7 @@ class CSVController extends DebuggerClass
                 $untProcessedData = $dataProcessor->createTUntData();
                 $fileHandler->exportCSV($untProcessedData, "storage/{$pharId}/T_UNT.csv");
 
-               // d_timing_facility ファイルを作成する
+                // d_timing_facility ファイルを作成する
                 $timingFacilityProcessedData = $dataProcessor->createTimingFacilityData();
                 $fileHandler->exportTextFile($timingFacilityProcessedData, "storage/{$pharId}/d_timing_facility.csv");
 
@@ -45,4 +45,3 @@ class CSVController extends DebuggerClass
         }
     }
 }
-d
