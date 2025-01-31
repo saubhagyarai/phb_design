@@ -55,7 +55,7 @@ class DataProcessorClass extends DebuggerClass
     // T UNTデータを生成する
     public function createTUntData()
     {
-        $comparedData = $this->compareUserDataWithMasterData();
+        [$comparedData] = $this->compareUserDataWithMasterData();
 
         $wrtDataMaster = [];
         $wrtDataUser = [];
@@ -132,7 +132,7 @@ class DataProcessorClass extends DebuggerClass
     // タイミング施設詳細データを生成する
     public function createTimingFacilityDetailData()
     {
-        $comparedData = $this->compareUserDataWithMasterData();
+        [$comparedData] = $this->compareUserDataWithMasterData();
 
         $facId = 101;
         $pharId = $this->pharId;
@@ -162,15 +162,20 @@ class DataProcessorClass extends DebuggerClass
     public function compareUserDataWithMasterData()
     {
         $comparedData = [];
-        // Loop the UserTimingData
+        $unmatchedData = [];
+
+        // Loop through the UserTimingData
         foreach ($this->inputCSV as $key => $row) {
+            $matched = false; // Flag to track if a match is found
             $enUserTitle = mb_convert_encoding($row["title"], "UTF-8", "SJIS");
+
             // Compare user time with Master time
             foreach ($this->masterData as $master) {
                 $enMasterTitle = mb_convert_encoding($master["title"], "UTF-8", "SJIS");
-                // ユーザー時間とマスターコードを比較
+
+                // Compare user title with master title
                 if ($enUserTitle == $enMasterTitle) {
-                    // データを新しい配列にマージ
+                    // Merge data into the comparedData array
                     $comparedData[$key] = [
                         "user" => $row,
                         "master" => [
@@ -180,14 +185,16 @@ class DataProcessorClass extends DebuggerClass
                             "print_group" => $master['print_group'],
                         ],
                     ];
-                    continue;
+                    $matched = true; // Set matched flag to true
+                    break; // Exit the master loop if a match is found
                 }
 
+                // Compare with adjusted timing data
                 if (isset(ADJUSTED_TIMING[$enMasterTitle])) {
                     foreach (ADJUSTED_TIMING[$enMasterTitle] as $value) {
-                        // ユーザー時間とマスターコードを比較
+                        // Compare user title with adjusted timing value
                         if ($enUserTitle == $value) {
-                            // データを新しい配列にマージ
+                            // Merge data into the comparedData array
                             $comparedData[$key] = [
                                 "user" => $row,
                                 "master" => [
@@ -197,11 +204,34 @@ class DataProcessorClass extends DebuggerClass
                                     "print_group" => $master['print_group'],
                                 ],
                             ];
+                            $matched = true; // Set matched flag to true
+                            break 2; // Exit both loops if a match is found
                         }
                     }
                 }
             }
+
+            // If no match was found, add to unmatchedData
+            if (!$matched) {
+                $unmatchedData[] = $enUserTitle; // Collect unmatched user data
+            }
         }
-        return $comparedData;
+
+        return [$comparedData, $unmatchedData];
+    }
+
+    // 一致したデータと一致しなかったデータをすべてログに記録します
+    public function unmatchedUserData()
+    {
+        [$comparedData, $unmatchedData] = $this->compareUserDataWithMasterData();
+        $timestamp = date('Y-m-d H:i:s');
+
+        if (empty($unmatchedData)) {
+            $logMessage = ["[$timestamp] ファイルが正常に生成されました。!!"];
+            return array_merge($logMessage, $unmatchedData);
+        }
+
+        $logMessage = ["[$timestamp] マスタータイミングに記載されていないタイミング::"];
+        return array_merge($logMessage, $unmatchedData);
     }
 }

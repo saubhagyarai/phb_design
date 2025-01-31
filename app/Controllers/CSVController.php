@@ -32,11 +32,15 @@ class CSVController extends DebuggerClass
 
                 // d_timing_facility ファイルを作成する
                 $timingFacilityProcessedData = $dataProcessor->createTimingFacilityData();
-                $fileHandler->exportTextFile($timingFacilityProcessedData, "storage/{$pharId}/d_timing_facility.csv");
+                $fileHandler->exportTextFile($timingFacilityProcessedData, "storage/{$pharId}/d_timing_facility.txt");
 
                 // d_timing_facility ファイルを作成する
                 $timingFacilityDetailProcessedData = $dataProcessor->createTimingFacilityDetailData();
-                $fileHandler->exportTextFile($timingFacilityDetailProcessedData, "storage/{$pharId}/d_timing_facility_Detail.csv");
+                $fileHandler->exportTextFile($timingFacilityDetailProcessedData, "storage/{$pharId}/d_timing_facility_Detail.txt");
+
+                // 一致しないタイミングデータファイルをログに記録する
+                $unmatchedUserData = $dataProcessor->unmatchedUserData();
+                $fileHandler->exportTextFile($unmatchedUserData, "storage/{$pharId}/log.txt");
 
                 echo "CSV file generated successfully!";
             } catch (Exception $e) {
