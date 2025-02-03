@@ -99,7 +99,7 @@ class FileHandlerClass extends DebuggerClass
     }
 
     // ディレクトリとその内容を削除する
-    private function deleteDirectory($dirPath)
+    public function deleteDirectory($dirPath)
     {
         // 削除前にディレクトリが空でないことを確認
         foreach (glob($dirPath . '/*') as $file) {
