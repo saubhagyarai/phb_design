@@ -82,6 +82,7 @@ class DataProcessorClass extends DebuggerClass
         foreach ([1 => 3001, 2 => 4001] as $type => $snStart) {
             $sn = $snStart;
             $pharId = $this->pharId;
+
             foreach ($comparedData as $value) {
                 $wrtDataUser[] = [
                     $sn,
@@ -90,7 +91,7 @@ class DataProcessorClass extends DebuggerClass
                     $value["user"]["print_value"],
                     $value["master"]["code"],
                     $value["master"]["print_code"],
-                    $pharId
+                    (int) $pharId
                 ];
                 $sn++;
             }
@@ -158,8 +159,23 @@ class DataProcessorClass extends DebuggerClass
         return $sqlQueries;
     }
 
+    // 一致したデータと一致しなかったデータをすべてログに記録します
+    public function unmatchedUserData()
+    {
+        [$comparedData, $unmatchedData] = $this->compareUserDataWithMasterData();
+        $timestamp = date('Y-m-d H:i:s');
+
+        if (empty($unmatchedData)) {
+            $logMessage = ["[$timestamp] ファイルが正常に生成されました。!!"];
+            return array_merge($logMessage, $unmatchedData);
+        }
+
+        $logMessage = ["[$timestamp] マスタータイミングに記載されていないタイミング::"];
+        return array_merge($logMessage, $unmatchedData);
+    }
+
     // ユーザータイミングデータとマスタータイミングデータを比較し、一致するデータに従ってマッピングする
-    public function compareUserDataWithMasterData()
+    private function compareUserDataWithMasterData()
     {
         $comparedData = [];
         $unmatchedData = [];
@@ -198,6 +214,7 @@ class DataProcessorClass extends DebuggerClass
                             $comparedData[$key] = [
                                 "user" => $row,
                                 "master" => [
+
                                     "title" => $master['title'],
                                     "code" => $master['code'],
                                     "print_code" => $master['print_code'],
@@ -210,7 +227,6 @@ class DataProcessorClass extends DebuggerClass
                     }
                 }
             }
-
             // If no match was found, add to unmatchedData
             if (!$matched) {
                 $unmatchedData[] = $enUserTitle; // Collect unmatched user data
@@ -218,20 +234,5 @@ class DataProcessorClass extends DebuggerClass
         }
 
         return [$comparedData, $unmatchedData];
-    }
-
-    // 一致したデータと一致しなかったデータをすべてログに記録します
-    public function unmatchedUserData()
-    {
-        [$comparedData, $unmatchedData] = $this->compareUserDataWithMasterData();
-        $timestamp = date('Y-m-d H:i:s');
-
-        if (empty($unmatchedData)) {
-            $logMessage = ["[$timestamp] ファイルが正常に生成されました。!!"];
-            return array_merge($logMessage, $unmatchedData);
-        }
-
-        $logMessage = ["[$timestamp] マスタータイミングに記載されていないタイミング::"];
-        return array_merge($logMessage, $unmatchedData);
     }
 }
