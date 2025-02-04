@@ -1,8 +1,13 @@
 <?php
 
+ini_set('display_errors', 1); // Display errors on the screen
+error_reporting(E_ALL); // Report all errors, including warnings
+
 use PHPUnit\Framework\TestCase;
 use App\DataProcessorClass;
 use App\FileHandlerClass;
+
+require_once 'bootstrap.php';
 
 class DataProcessorClassTest extends TestCase
 {

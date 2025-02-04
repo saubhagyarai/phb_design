@@ -28,6 +28,7 @@ class CSVController extends DebuggerClass
                 $dataProcessor = new DataProcessorClass($csvData, $pharId);
                 // T_UNTファイルを作成する
                 $untProcessedData = $dataProcessor->createTUntData();
+
                 $fileHandler->exportCSV($untProcessedData, "storage/{$pharId}/T_UNT.csv");
 
                 // d_timing_facility ファイルを作成する
@@ -40,6 +41,7 @@ class CSVController extends DebuggerClass
 
                 // 一致しないタイミングデータファイルをログに記録する
                 $unmatchedUserData = $dataProcessor->unmatchedUserData();
+
                 $fileHandler->exportTextFile($unmatchedUserData, "storage/{$pharId}/log.txt");
 
                 echo "CSV file generated successfully!";
